@@ -65,10 +65,10 @@ USAGE: $(basename ${0})
  -z TMPDIR Location             # OPTIONAL (default=0='TMPDIR Run')
 
 TYPICAL COMMANDS:
-                                $(basename ${0}) -p Proteins_Fasta_File.fa
-                                $(basename ${0}) -p Proteins_Fasta_File.fa -c yes
-                                $(basename ${0}) -t Transcripts_Fasta_File.fa
-                                $(basename ${0}) -t Transcripts_Fasta_File.fa -c yes
+ $(basename ${0}) -p Proteins_Fasta_File.fa
+ $(basename ${0}) -p Proteins_Fasta_File.fa -c yes
+ $(basename ${0}) -t Transcripts_Fasta_File.fa
+ $(basename ${0}) -t Transcripts_Fasta_File.fa -c yes
 
 INPUT01:          -p FLAG       REQUIRED input ONLY if the '-t' flag
                                   associated file is not provided
@@ -80,9 +80,11 @@ INPUT02:          -t FLAG       REQUIRED input ONLY if the '-p' flag
 INPUT02_FORMAT:                 Transcriptome Fasta File
 INPUT02_DEFAULT:                No default
 
-INPUT03:          -l FLAG       OPTIONAL input. Sequence Lower Size Filtering Value
+INPUT03:          -l FLAG       OPTIONAL input. Lower Size Filtering Value
 INPUT03_FORMAT:                 Numeric
-INPUT03_DEFAULT:                50 (proteins) | 150 (transcripts) | 1 = No Limit (Do Not Filter)
+INPUT03_DEFAULT:                50 (proteins)
+                                150 (transcripts)
+                                1 = No Limit (Do Not Filter)
 INPUT03_NOTES:
  If provided, this number will be used to reject sequences whose length are
 equal to, or shorter than, the number provided.
@@ -186,11 +188,11 @@ EOF
 ## Defining_Script_Current_Version
 version="1.0.3";
 
-## Defining_Script_Initial_Version_Data (date '+DATE:%Y/%m/%d%tTIME:%R')
-version_date_initial="DATE:2020/08/17   TIME:00:00";
+## Defining_Script_Initial_Version_Data (date '+DATE:%Y/%m/%d')
+version_date_initial="DATE:2020/08/17";
 
-## Defining_Script_Current_Version_Data (date '+DATE:%Y/%m/%d%tTIME:%R')
-version_date_current="DATE:2024/05/11	TIME:16:07";
+## Defining_Script_Current_Version_Data (date '+DATE:%Y/%m/%d')
+version_date_current="DATE:2024/05/14";
 
 ## Testing_Script_Input
 ## Is the number of arguments null?
@@ -261,7 +263,7 @@ do
             shift;
             ;;
 	-z|--z|-tmp-dir|--tmp-dir)
-            var_tmp_dir=${2};
+            tmp_dir=${2};
             shift;
             ;;
         -?*)
@@ -514,13 +516,13 @@ fi
 
 ## Processing '-z' Flag
 ## Determining Where The TMPDIR Will Be Generated
-if [[ -z ${var_tmp_dir} ]];
+if [[ -z ${tmp_dir} ]];
 then
-    var_tmp_dir=${var_tmp_dir:=0};
+    tmp_dir=${tmp_dir:=0};
 fi
 
 var_regex="^[0-1]+$"
-if ! [[ ${var_tmp_dir} =~ ${var_regex} ]];
+if ! [[ ${tmp_dir} =~ ${var_regex} ]];
 then
     echo "Please provide a valid number (e.g., 0 or 1), for this variable";
     func_usage;
@@ -528,30 +530,31 @@ then
 fi
 
 ## Generating Directories
-var_script_out_data_dir="${INFILE01%.fa}_Fasta_Seq_Prepare.dir";
+var_script_out_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.dir";
+export var_script_out_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.dir";
 
-if [[ ! -d ./${var_script_out_data_dir} ]];
+if [[ ! -d ${var_script_out_data_dir} ]];
 then
-    mkdir ./${var_script_out_data_dir};
+    mkdir ${var_script_out_data_dir};
 else
-    rm ./${var_script_out_data_dir}/* &>/dev/null;
+    rm ${var_script_out_data_dir}/* &>/dev/null;
 fi
 
-if [[ -d ./${INFILE01%.fa}_Fasta_Seq_Prepare.tmp ]];
+if [[ -d ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp ]];
 then
-    rm -fr ./${INFILE01%.fa}_Fasta_Seq_Prepare.tmp;
+    rm -fr ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp &>/dev/null;
 fi
 
 ## Generating/Cleaning TMP Data Directory
-if [[ ${var_tmp_dir} -eq 0 ]];
+if [[ ${tmp_dir} -eq 0 ]];
 then
     ## Defining Script TMP Data Directory
-    var_script_tmp_data_dir="$(pwd)/${INFILE01%.fa}_Fasta_Seq_Prepare.tmp";
-    export var_script_tmp_data_dir="$(pwd)/${INFILE01%.fa}_Fasta_Seq_Prepare.tmp";
+    var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
+    export var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
 
-    if [[ -d $(basename ${var_script_tmp_data_dir}) ]];
+    if [[ -d ${var_script_tmp_data_dir} ]];
     then
-	rm -fr $(basename ${var_script_tmp_data_dir});
+	rm -fr ${var_script_tmp_data_dir};
     fi
 
     if [[ -z ${TMPDIR} ]];
@@ -565,36 +568,36 @@ then
     if [[ ! -z ${TMPDIR} ]];
     then
         ## echo "TMPDIR defined";
-        TMP=$(mktemp -d -p "${TMPDIR}"); ## &> /dev/null);
+        TMP=$(mktemp -d -p ${TMPDIR}); ## &> /dev/null);
         var_script_tmp_data_dir=${TMP};
         export  var_script_tmp_data_dir=${TMP};
 
     fi
 fi
 
-if [[ ${var_tmp_dir} -eq 1 ]];
+if [[ ${tmp_dir} -eq 1 ]];
 then
     ## Defining Script TMP Data Directory
-    var_script_tmp_data_dir="$(pwd)/${INFILE01%.fa}_Fasta_Seq_Prepare.tmp";
-    export var_script_tmp_data_dir="$(pwd)/${INFILE01%.fa}_Fasta_Seq_Prepare.tmp";
+    var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
+    export var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
 
-    if [[ ! -d $(basename ${var_script_tmp_data_dir}) ]];
+    if [[ ! -d ${var_script_tmp_data_dir} ]];
     then
-        mkdir $(basename ${var_script_tmp_data_dir});
+        mkdir ${var_script_tmp_data_dir};
     else
-        rm -fr $(basename ${var_script_tmp_data_dir});
-        mkdir $(basename ${var_script_tmp_data_dir});
+        rm -fr ${var_script_tmp_data_dir};
+        mkdir ${var_script_tmp_data_dir};
     fi
 fi
 
 ## Initializing_Log_File
 time_execution_start=$(date +%s);
 echo -e "Starting Processing on: "$(date)"" \
-     > ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+     > ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 
 ## Verifying_Software_Dependency_Existence
 echo -e "Verifying Software Dependency Existence on: "$(date)"" \
-     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 ## Determining_Current_Computer_Platform
 osname=$(uname -s);
 cputype=$(uname -m);
@@ -608,25 +611,25 @@ esac
 ## Determining_GNU_Bash_Version
 if [[ ${BASH_VERSINFO:-0} -ge 4 ]];
 then
-    echo "GNU_BASH version 4 or higher is Installed" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo "GNU_BASH version "${BASH_VERSINFO}" is Installed" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo "GNU_BASH version 4 or higher is Not Installed";
     echo "Please Install GNU_BASH version 4 or higher";
-    rm -fr ./${var_script_out_data_dir};
+    rm -fr ${var_script_out_data_dir};
     rm -fr ${var_script_tmp_data_dir};
     func_usage;
     exit 1;
 fi
 ## Testing_GNU_Awk_Installation
 type gawk &> /dev/null;
-var_sde=$(echo $?);
+var_sde=$(echo ${?});
 if [[ ${var_sde} -eq 0 ]];
 then
-    echo "GNU_AWK is Installed" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo "GNU_AWK is Installed" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo "GNU_AWK is Not Installed";
     echo "Please Install GNU_AWK";
-    rm -fr ./${var_script_out_data_dir};
+    rm -fr ${var_script_out_data_dir};
     rm -fr ${var_script_tmp_data_dir};
     func_usage;
     exit 1;
@@ -636,22 +639,22 @@ if [[ ${var_clustersequences} == "cluster_sequences" ]];
 then
     ## cd-hit
     type cd-hit &> /dev/null;
-    var_sde=$(echo $?);
+    var_sde=$(echo ${?});
     if [[ ${var_sde} -eq 0 ]];
     then
-        echo "cd-hit is Installed" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+        echo "cd-hit is Installed" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     else
         echo "cd-hit is Not Installed";
 	echo "Please Install cd-hit";
-	rm -fr ./${var_script_out_data_dir};
+	rm -fr ${var_script_out_data_dir};
 	rm -fr ${var_script_tmp_data_dir};
 	func_usage;
         exit 1;
     fi
 fi
 
-echo -e "Software Dependencies Verified on: "$(date)"\n" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
-echo -e "Script Running on: "${osname}", "${cputype}"\n" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+echo -e "Software Dependencies Verified on: "$(date)"\n" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+echo -e "Script Running on: "${osname}", "${cputype}"\n" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 
 ## set LC_ALL to "C"
 export LC_ALL="C";
@@ -677,104 +680,107 @@ func_fasta_formatter(){
 func_time_execution_stop (){
     time_execution_stop=$(date +%s);
     echo -e "\nFinishing Processing on: "$(date)"" \
-	 >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	 >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     echo -e "Script Runtime (sec): $(echo "${time_execution_stop}"-"${time_execution_start}"|bc -l) seconds" \
-	 >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	 >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     echo -e "Script Runtime (min): $(echo "scale=2;(${time_execution_stop}"-"${time_execution_start})/60"|bc -l) minutes" \
-	 >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	 >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     echo -e "Script Runtime (hs): $(echo "scale=2;((${time_execution_stop}"-"${time_execution_start})/60)/60"|bc -l) hours" \
-	 >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	 >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 };
 
 ## START
-echo -e "Command Issued Was:" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+echo -e "Command Issued Was:" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+echo -e "\tScript Name:\t\t$(basename ${0})" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+
 if [[ ${var_INFILE01} == "proteins_file" ]];
 then
-    echo -e "\tFile Type:\tProteome" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\tFile Type:\t\tProteome" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\tFile Type:\tTranscriptome" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\tFile Type:\t\tTranscriptome" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_seqlowersize} == "l_Off" && ${var_INFILE01} == "proteins_file" ]];
 then
-    echo -e "\t-l Flag:\tSequence Lower Size: 50 aar" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-l Flag:\t\tSequence Lower Size: 50 aar" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_seqlowersize} == "l_Off" && ${var_INFILE01} == "transcripts_file" ]];
 then
-    echo -e "\t-l Flag:\tSequence Lower Size: 150 nt" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-l Flag:\t\tSequence Lower Size: 150 nt" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 
 fi
 if [[ ${var_seqlowersize} != "l_Off" ]];
 then
     if [[ ${var_INFILE01} == "proteins_file" ]];
     then
-	echo -e "\t-l Flag:\tSequence Lower Size: "${seqlowersize}" aar" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	echo -e "\t-l Flag:\t\tSequence Lower Size: "${seqlowersize}" aar" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     fi
     if [[ ${var_INFILE01} == "transcripts_file" ]];
     then
-	echo -e "\t-l Flag:\tSequence Lower Size: "${seqlowersize}" nt" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	echo -e "\t-l Flag:\t\tSequence Lower Size: "${seqlowersize}" nt" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     fi
 fi
 if [[ ${var_sequppersize} == "unlimited_sequppersize" ]];
 then
-    echo -e "\t-u Flag:\tSequence Upper Size: No Limit" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-u Flag:\t\tSequence Upper Size: No Limit" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-u Flag:\tSequence Upper Size: "${sequppersize}"" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-u Flag:\t\tSequence Upper Size: "${sequppersize}"" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_filterbiotypes} == "filter_biotypes" ]];
 then
-    echo -e "\t-f Flag:\tFilter Biotypes: Yes" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-f Flag:\t\tFilter Biotypes: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-f Flag:\tFilter Biotypes: No" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-f Flag:\t\tFilter Biotypes: No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_dustgremlings} == "dust_gremlings" ]];
 then
-    echo -e "\t-d Flag:\tDust Gremlings: Yes" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-d Flag:\t\tDust Gremlings: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-d Flag:\tDust Gremlings: No" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-d Flag:\t\tDust Gremlings: No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_sortshortertolarger} == "do_not_sort_shorter_to_larger" ]];
 then
-    echo -e "\t-s Flag:\tSort File (Shorter to Larger): No" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-s Flag:\t\tSort File (Shorter to Larger): No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-s Flag:\tSort File (Shorter to Larger): Yes" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-s Flag:\t\tSort File (Shorter to Larger): Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_sortlargertoshorter} == "do_not_sort_larger_to_shorter" ]];
 then
-    echo -e "\t-r Flag:\tSort File (Larger to Shorter): No" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-r Flag:\t\tSort File (Larger to Shorter): No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-r Flag:\tSort File (Larger to Shorter): Yes" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-r Flag:\t\tSort File (Larger to Shorter): Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${var_clustersequences} == "do_not_cluster_sequences" ]];
 then
-    echo -e "\t-c Flag:\tCluster Sequences: No" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-c Flag:\t\tCluster Sequences: No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-c Flag:\tCluster Sequences: Yes" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-c Flag:\t\tCluster Sequences: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
+echo -e "\t-w Flag:\t\tFasta Width: "${fasta_width}"" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 ## Checking if the fasta file can be splitted
 if [[ ${split_file} -eq 1 ]];
 then
-    echo -e "\t-i Flag:\tFasta File Splitting was not Requested" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-i Flag:\t\tFasta File Splitting was not Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
-    echo -e "\t-i Flag:\tFasta File Splitting was Requested with files containing "${split_file}" sequence(s) each" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-i Flag:\t\tFasta File Splitting was Requested with files containing "${split_file}" sequence(s) each" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 if [[ ${split_file} -gt 1 && $(grep -c --max-count=2 ">" ${INFILE01}) -eq 1 ]];
 then
-    echo -e "\t-i Flag:\tBut...The Fasta file you have provided cannot be splitted" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
-fi
-## Checking where the TMPDIR will be generated
-if [[ ${var_tmp_dir} -eq 0 ]];
-then
-    echo -e "\t-z Flag:\tTMPDIR Run for the TMPDIR was Requested" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
-else
-    echo -e "\t-z Flag:\tLocal Run for the TMPDIR was Requested" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+    echo -e "\t-i Flag:\t\tBut...The Fasta file you have provided cannot be splitted" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 ## Determining Number of Cores Requested
-echo -e "\t-x Flag:\tNumber of cores used: ${ncores}" >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+echo -e "\t-x Flag:\t\tNumber of cores used: ${ncores}" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+## Checking where the TMPDIR will be generated
+if [[ ${tmp_dir} -eq 0 ]];
+then
+    echo -e "\t-z Flag:\t\tTMPDIR Run for the TMPDIR was Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+else
+    echo -e "\t-z Flag:\t\tLocal Run for the TMPDIR was Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+fi
 
 ##  Remove empty lines (if present)
 ## sed --in-place=.bkup '/^$/d' ${INFILE01};
 grep -P "^$" ${INFILE01} &> /dev/null;
-var_sde=$(echo $?);
+var_sde=$(echo ${?});
 if [[ ${var_sde} -eq 0 ]];
 then
     sed '/^$/d' ${INFILE01} > ${var_script_tmp_data_dir}/0000_${INFILE01};
@@ -861,7 +867,7 @@ if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -eq
 then
     func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
     mv ${var_script_tmp_data_dir}/0007_${INFILE01} \
-       ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
+       ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
     rm -fr ${var_script_tmp_data_dir};
     func_time_execution_stop;
     exit 0;
@@ -877,7 +883,7 @@ then
     for i in ${lines[@]};
     do
 	func_fasta_formatter ${i} ${var_script_tmp_data_dir}/0008_$(basename ${i});
-	cp ${var_script_tmp_data_dir}/0008_$(basename ${i}) ./${var_script_out_data_dir}/${INFILE01%.fa}_"${count}"_Fasta_Seq_Prep.fa;
+	cp ${var_script_tmp_data_dir}/0008_$(basename ${i}) ${var_script_out_data_dir}/${INFILE01%.fa}_"${count}"_Fasta_Seq_Prep.fa;
 	((count++));
     done
     rm -fr ${var_script_tmp_data_dir};
@@ -897,14 +903,14 @@ then
 	    -i ${var_script_tmp_data_dir}/0007_${INFILE01} \
 	    -o ${var_script_tmp_data_dir}/0008_${INFILE01} \
 	    &> ${var_script_tmp_data_dir}/0008_${INFILE01}.log;
-	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
-	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
+	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
+	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
 	echo -e "\nCD-HIT Clustering Log" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	cat ${var_script_tmp_data_dir}/0008_${INFILE01%}.log \
-	    >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	    >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	echo -e "================================================================" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	rm -fr ${var_script_tmp_data_dir};
 	func_time_execution_stop;
 	exit 0;
@@ -918,14 +924,14 @@ then
 	    -i ${var_script_tmp_data_dir}/0007_${INFILE01} \
 	    -o ${var_script_tmp_data_dir}/0008_${INFILE01} \
 	    &> ${var_script_tmp_data_dir}/0008_${INFILE01}.log;
-	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
-	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
+	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
+	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
 	echo -e "\nCD-HIT Clustering Log" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	cat ${var_script_tmp_data_dir}/0008_${INFILE01%}.log \
-	    >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	    >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	echo -e "================================================================" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	rm -fr ${var_script_tmp_data_dir};
 	func_time_execution_stop;
 	exit 0;
@@ -956,17 +962,17 @@ then
 	for i in "${lines[@]}";
 	do
 	    func_fasta_formatter $i ${var_script_tmp_data_dir}/0011_$(basename $i);
-	    cp ${var_script_tmp_data_dir}/0011_$(basename $i) ./${var_script_out_data_dir}/${INFILE01%.fa}_"$count"_Fasta_Seq_Prep.fa;
+	    cp ${var_script_tmp_data_dir}/0011_$(basename $i) ${var_script_out_data_dir}/${INFILE01%.fa}_"$count"_Fasta_Seq_Prep.fa;
 	    ((count++));
 	done
-	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
-	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
+	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
+	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
 	echo -e "\nCD-HIT Clustering Log" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	cat ${var_script_tmp_data_dir}/0008_${INFILE01%}.log \
-	    >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	    >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	echo -e "================================================================" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	rm -fr ${var_script_tmp_data_dir};
 	func_time_execution_stop;
 	exit 0;
@@ -992,18 +998,18 @@ then
 	for i in "${lines[@]}";
 	do
 	    func_fasta_formatter $i ${var_script_tmp_data_dir}/0011_$(basename $i);
-	    cp ${var_script_tmp_data_dir}/0011_$(basename $i) ./${var_script_out_data_dir}/${INFILE01%.fa}_"$count"_Fasta_Seq_Prep.fa;
+	    cp ${var_script_tmp_data_dir}/0011_$(basename $i) ${var_script_out_data_dir}/${INFILE01%.fa}_"$count"_Fasta_Seq_Prep.fa;
 	    ((count++));
 	done
 
-	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
-	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
+	mv ${var_script_tmp_data_dir}/0008_${INFILE01} ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
+	cp ${var_script_tmp_data_dir}/0008_${INFILE01}.clstr ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.clstr;
 	echo -e "\nCD-HIT Clustering Log" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	cat ${var_script_tmp_data_dir}/0008_${INFILE01%}.log \
-	    >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	    >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	echo -e "================================================================" \
-	     >> ./${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+	     >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 	rm -fr ${var_script_tmp_data_dir};
 	func_time_execution_stop;
 	exit 0;

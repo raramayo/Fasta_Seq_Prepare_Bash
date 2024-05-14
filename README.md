@@ -114,10 +114,10 @@ USAGE: Fasta_Seq_Prepare_v1.0.3.sh
  -z TMPDIR Location             # OPTIONAL (default=0='TMPDIR Run')
 
 TYPICAL COMMANDS:
-                                Fasta_Seq_Prepare_v1.0.3.sh -p Proteins_Fasta_File.fa
-                                Fasta_Seq_Prepare_v1.0.3.sh -p Proteins_Fasta_File.fa -c yes
-                                Fasta_Seq_Prepare_v1.0.3.sh -t Transcripts_Fasta_File.fa
-                                Fasta_Seq_Prepare_v1.0.3.sh -t Transcripts_Fasta_File.fa -c yes
+ Fasta_Seq_Prepare_v1.0.3.sh -p Proteins_Fasta_File.fa
+ Fasta_Seq_Prepare_v1.0.3.sh -p Proteins_Fasta_File.fa -c yes
+ Fasta_Seq_Prepare_v1.0.3.sh -t Transcripts_Fasta_File.fa
+ Fasta_Seq_Prepare_v1.0.3.sh -t Transcripts_Fasta_File.fa -c yes
 
 INPUT01:          -p FLAG       REQUIRED input ONLY if the '-t' flag
                                   associated file is not provided
@@ -129,9 +129,11 @@ INPUT02:          -t FLAG       REQUIRED input ONLY if the '-p' flag
 INPUT02_FORMAT:                 Transcriptome Fasta File
 INPUT02_DEFAULT:                No default
 
-INPUT03:          -l FLAG       OPTIONAL input. Sequence Lower Size Filtering Value
+INPUT03:          -l FLAG       OPTIONAL input. Lower Size Filtering Value
 INPUT03_FORMAT:                 Numeric
-INPUT03_DEFAULT:                50 (proteins) | 150 (transcripts) | 1 = No Limit (Do Not Filter)
+INPUT03_DEFAULT:                50 (proteins)
+                                150 (transcripts)
+                                1 = No Limit (Do Not Filter)
 INPUT03_NOTES:
  If provided, this number will be used to reject sequences whose length are
 equal to, or shorter than, the number provided.
