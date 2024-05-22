@@ -196,15 +196,13 @@ version_date_current="DATE:2024/05/14";
 
 ## Testing_Script_Input
 ## Is the number of arguments null?
-if [[ ${#} -eq 0 ]];
-then
+if [[ ${#} -eq 0 ]];then
     echo -e "\nPlease enter required arguments";
     func_usage;
     exit 1;
 fi
 
-while true;
-do
+while true;do
     case ${1} in
         -h|--h|-help|--help|-\?|--\?)
             func_usage;
@@ -290,106 +288,88 @@ do
 done
 
 ## Processing: -p and -t Flags
-if [[ ! -z ${proteinsfile} ]];
-then
+if [[ ! -z ${proteinsfile} ]];then
     INFILE01=${proteinsfile};
     var_INFILE01="proteins_file";
 else
     var_INFILE01="transcripts_file";
 fi
-if [[ ${var_INFILE01} == "proteins_file" ]];
-then
-    if [[ ! -f ${proteinsfile} ]];
-    then
+if [[ ${var_INFILE01} == "proteins_file" ]];then
+    if [[ ! -f ${proteinsfile} ]];then
 	echo "Please provide a proteome fasta file";
 	func_usage;
 	exit 1;
     fi
 fi
-if [[ ! -z ${transcriptsfile} ]];
-then
+if [[ ! -z ${transcriptsfile} ]];then
     INFILE01=${transcriptsfile};
     var_INFILE01="transcripts_file";
 else
     var_INFILE01="proteins_file";
 fi
-if [[ ${var_INFILE01} == "transcripts_file" ]];
-then
-    if [[ ! -f ${transcriptsfile} ]];
-    then
+if [[ ${var_INFILE01} == "transcripts_file" ]];then
+    if [[ ! -f ${transcriptsfile} ]];then
 	echo "Please provide a transcriptome fasta file";
 	func_usage;
 	exit 1;
     fi
 fi
-if [[ ! -z ${proteinsfile} && ! -z ${transcriptsfile} ]];
-then
+if [[ ! -z ${proteinsfile} && ! -z ${transcriptsfile} ]];then
     echo -e "\nPlease provide either a protein of a transcript file, but not both";
     func_usage;
     exit 1;
 fi
 
 ## Processing: -l Flag
-if [[ -z ${seqlowersize} ]];
-then
-    if [[ ${var_INFILE01} == "proteins_file" ]];
-    then
+if [[ -z ${seqlowersize} ]];then
+    if [[ ${var_INFILE01} == "proteins_file" ]];then
 	seqlowersize=${seqlowersize:=50};
     fi
 
-    if [[ ${var_INFILE01} == "transcripts_file" ]];
-    then
+    if [[ ${var_INFILE01} == "transcripts_file" ]];then
 	seqlowersize=${seqlowersize:=150};
     fi
 else
     var_posix_regcomp="^[0-9]+$";
-    if ! [[ ${seqlowersize} =~ ${var_posix_regcomp} ]];
-    then
+    if ! [[ ${seqlowersize} =~ ${var_posix_regcomp} ]];then
 	echo -e "\nPlease enter a numeric argument for lower size sequences";
 	func_usage;
 	exit 1;
     fi
     seqlowersize=${seqlowersize:=1};
 fi
-if [[ ${seqlowersize} == "50" || ${seqlowersize} == "150" ]];
-then
+if [[ ${seqlowersize} == "50" || ${seqlowersize} == "150" ]];then
     var_seqlowersize="l_Off";
 else
     var_seqlowersize="l_"${seqlowersize}"";
 fi
 
 ## Processing: -u Flag
-if [[ -z ${sequppersize} ]];
-then
+if [[ -z ${sequppersize} ]];then
     sequppersize=${sequppersize:=0};
 else
     var_posix_regcomp="^[0-9]+$";
-    if ! [[ ${sequppersize} =~ ${var_posix_regcomp} ]];
-    then
+    if ! [[ ${sequppersize} =~ ${var_posix_regcomp} ]];then
 	echo -e "\nPlease enter a numeric argument for upper size sequences";
 	func_usage;
 	exit 1;
     fi
     sequppersize=${sequppersize};
 fi
-if [[ ${sequppersize} -eq 0 ]];
-then
+if [[ ${sequppersize} -eq 0 ]];then
     var_sequppersize="unlimited_sequppersize";
 else
     var_sequppersize="limited_sequppersize";
 fi
 
 ## Processing: -f Flag
-if [[ -z ${filterbiotypes} ]];
-then
+if [[ -z ${filterbiotypes} ]];then
     filterbiotypes=${filterbiotypes:=no};
 fi
-if [[ ${filterbiotypes} == "n" ||  ${filterbiotypes} == "N" || ${filterbiotypes} == "no" || ${filterbiotypes} == "No" || ${filterbiotypes} == "NO" ]];
-then
+if [[ ${filterbiotypes} == "n" ||  ${filterbiotypes} == "N" || ${filterbiotypes} == "no" || ${filterbiotypes} == "No" || ${filterbiotypes} == "NO" ]];then
     var_filterbiotypes="do_not_filter_biotypes";
 elif
-    [[ ${filterbiotypes} == "y" || ${filterbiotypes} == "Y" || ${filterbiotypes} == "yes" || ${filterbiotypes} == "Yes" || ${filterbiotypes} == "YES" ]];
-then
+    [[ ${filterbiotypes} == "y" || ${filterbiotypes} == "Y" || ${filterbiotypes} == "yes" || ${filterbiotypes} == "Yes" || ${filterbiotypes} == "YES" ]];then
     var_filterbiotypes="filter_biotypes";
 else
     echo -e "Check Spelling of the '-f' Flag";
@@ -398,16 +378,13 @@ else
 fi
 
 ## Processing: -d Flag
-if [[ -z ${dustgremlings} ]];
-then
+if [[ -z ${dustgremlings} ]];then
     dustgremlings=${dustgremlings:=yes};
 fi
-if [[ ${dustgremlings} == "y" || ${dustgremlings} == "Y" || ${dustgremlings} == "yes" || ${dustgremlings} == "Yes" || ${dustgremlings} == "YES" ]];
-then
+if [[ ${dustgremlings} == "y" || ${dustgremlings} == "Y" || ${dustgremlings} == "yes" || ${dustgremlings} == "Yes" || ${dustgremlings} == "YES" ]];then
     var_dustgremlings="dust_gremlings";
 elif
-    [[ ${dustgremlings} == "n" || ${dustgremlings} == "N" || ${dustgremlings} == "no" || ${dustgremlings} == "No" || ${dustgremlings} == "NO" ]];
-then
+    [[ ${dustgremlings} == "n" || ${dustgremlings} == "N" || ${dustgremlings} == "no" || ${dustgremlings} == "No" || ${dustgremlings} == "NO" ]];then
     var_dustgremlings="do_not_dust_gremlings";
 else
     echo -e "Check Spelling of the '-d' Flag";
@@ -416,16 +393,13 @@ else
 fi
 
 ## Processing: -s Flag
-if [[ -z ${sortshortertolarger} ]];
-then
+if [[ -z ${sortshortertolarger} ]];then
     sortshortertolarger=${sortshortertolarger:=no};
 fi
-if [[ ${sortshortertolarger} == "n" || ${sortshortertolarger} == "N" || ${sortshortertolarger} == "no" || ${sortshortertolarger} == "No" || ${sortshortertolarger} == "NO" ]];
-then
+if [[ ${sortshortertolarger} == "n" || ${sortshortertolarger} == "N" || ${sortshortertolarger} == "no" || ${sortshortertolarger} == "No" || ${sortshortertolarger} == "NO" ]];then
     var_sortshortertolarger="do_not_sort_shorter_to_larger";
 elif
-    [[ ${sortshortertolarger} == "y" || ${sortshortertolarger} == "Y" || ${sortshortertolarger} == "yes" || ${sortshortertolarger} == "Yes" || ${sortshortertolarger} == "YES" ]];
-then
+    [[ ${sortshortertolarger} == "y" || ${sortshortertolarger} == "Y" || ${sortshortertolarger} == "yes" || ${sortshortertolarger} == "Yes" || ${sortshortertolarger} == "YES" ]];then
     var_sortshortertolarger="sort_shorter_to_larger";
 else
     echo -e "Check Spelling of the '-s' Flag";
@@ -434,40 +408,33 @@ else
 fi
 
 ## Processing: -r Flag
-if [[ -z ${sortlargertoshorter} ]];
-then
+if [[ -z ${sortlargertoshorter} ]];then
     sortlargertoshorter=${sortlargertoshorter:=no};
 fi
-if [[ ${sortlargertoshorter} == "n" || ${sortlargertoshorter} == "N" || ${sortlargertoshorter} == "no" || ${sortlargertoshorter} == "No" || ${sortlargertoshorter} == "NO" ]];
-then
+if [[ ${sortlargertoshorter} == "n" || ${sortlargertoshorter} == "N" || ${sortlargertoshorter} == "no" || ${sortlargertoshorter} == "No" || ${sortlargertoshorter} == "NO" ]];then
     var_sortlargertoshorter="do_not_sort_larger_to_shorter";
 elif
-    [[ ${sortlargertoshorter} == "y" || ${sortlargertoshorter} == "Y" || ${sortlargertoshorter} == "yes" || ${sortlargertoshorter} == "Yes" || ${sortlargertoshorter} == "YES" ]];
-then
+    [[ ${sortlargertoshorter} == "y" || ${sortlargertoshorter} == "Y" || ${sortlargertoshorter} == "yes" || ${sortlargertoshorter} == "Yes" || ${sortlargertoshorter} == "YES" ]];then
     var_sortlargertoshorter="sort_larger_to_shorter";
 else
     echo -e "Check Spelling of the '-r' Flag";
     func_usage;
     exit 1;
 fi
-if [[ ${var_sortshortertolarger} == "sort_shorter_to_larger" && ${var_sortlargertoshorter} == "sort_larger_to_shorter" ]];
-then
+if [[ ${var_sortshortertolarger} == "sort_shorter_to_larger" && ${var_sortlargertoshorter} == "sort_larger_to_shorter" ]];then
     echo "You cannot request to sort from larger to smaller and smaller to larger at the same time";
     func_usage;
     exit 1;
 fi
 
 ## Processing: -c Flag
-if [[ -z ${clustersequences} ]];
-then
+if [[ -z ${clustersequences} ]];then
     clustersequences=${clustersequences:=no};
 fi
-if [[ ${clustersequences} == "n" || ${clustersequences} == "N" || ${clustersequences} == "no" || ${clustersequences} == "No" || ${clustersequences} == "NO" ]];
-then
+if [[ ${clustersequences} == "n" || ${clustersequences} == "N" || ${clustersequences} == "no" || ${clustersequences} == "No" || ${clustersequences} == "NO" ]];then
     var_clustersequences="do_not_cluster_sequences";
 elif
-    [[ ${clustersequences} == "y" || ${clustersequences} == "Y" || ${clustersequences} == "yes" || ${clustersequences} == "Yes" || ${clustersequences} == "YES" ]];
-then
+    [[ ${clustersequences} == "y" || ${clustersequences} == "Y" || ${clustersequences} == "yes" || ${clustersequences} == "Yes" || ${clustersequences} == "YES" ]];then
     var_clustersequences="cluster_sequences";
 else
     echo -e "Check Spelling of the '-c' Flag";
@@ -477,20 +444,17 @@ fi
 
 ## Processing: -w Flag
 ## Assigning Width Outputted Fasta File
-if [[ -z ${fasta_width} ]];
-then
+if [[ -z ${fasta_width} ]];then
     fasta_width=${fasta_width:=80};
 fi
 
 ## Processing: -i Flag
 ## Assigning Splitting of the Outputted Fasta File
-if [[ -z ${split_file} ]];
-then
+if [[ -z ${split_file} ]];then
     split_file=${split_file:=1};
 else
     var_posix_regcomp="^[0-9]+$";
-    if ! [[ ${split_file} =~ ${var_posix_regcomp} ]];
-    then
+    if ! [[ ${split_file} =~ ${var_posix_regcomp} ]];then
 	echo -e "\nPlease enter a numeric argument for splitting the file";
 	func_usage;
 	exit 1;
@@ -499,31 +463,26 @@ fi
 
 ## Processing: -x Flag
 ## Assigning Number of Cores
-if [[ -z ${ncores} ]];
-then
+if [[ -z ${ncores} ]];then
     ncores=${ncores:=2};
 fi
 ## Checking_Processors_Number
 var_nproc=$(nproc --all);
-if [[ ${ncores} -ge ${var_nproc} ]];
-then
+if [[ ${ncores} -ge ${var_nproc} ]];then
     ncores=$(( ${var_nproc} - 2 ));
-elif [[ ${ncores} -eq ${var_nproc} ]];
-then
+elif [[ ${ncores} -eq ${var_nproc} ]];then
     ncores=$(( "$NPROC" - 2 ));
 else [[ ${ncores} -lt ${var_nproc} ]];
 fi
 
 ## Processing '-z' Flag
 ## Determining Where The TMPDIR Will Be Generated
-if [[ -z ${tmp_dir} ]];
-then
+if [[ -z ${tmp_dir} ]];then
     tmp_dir=${tmp_dir:=0};
 fi
 
 var_regex="^[0-1]+$"
-if ! [[ ${tmp_dir} =~ ${var_regex} ]];
-then
+if ! [[ ${tmp_dir} =~ ${var_regex} ]];then
     echo "Please provide a valid number (e.g., 0 or 1), for this variable";
     func_usage;
     exit 1;
@@ -533,56 +492,47 @@ fi
 var_script_out_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.dir";
 export var_script_out_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.dir";
 
-if [[ ! -d ${var_script_out_data_dir} ]];
-then
+if [[ ! -d ${var_script_out_data_dir} ]];then
     mkdir ${var_script_out_data_dir};
 else
     rm ${var_script_out_data_dir}/* &>/dev/null;
 fi
 
-if [[ -d ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp ]];
-then
+if [[ -d ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp ]];then
     rm -fr ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp &>/dev/null;
 fi
 
 ## Generating/Cleaning TMP Data Directory
-if [[ ${tmp_dir} -eq 0 ]];
-then
+if [[ ${tmp_dir} -eq 0 ]];then
     ## Defining Script TMP Data Directory
     var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
     export var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
 
-    if [[ -d ${var_script_tmp_data_dir} ]];
-    then
+    if [[ -d ${var_script_tmp_data_dir} ]];then
 	rm -fr ${var_script_tmp_data_dir};
     fi
 
-    if [[ -z ${TMPDIR} ]];
-    then
+    if [[ -z ${TMPDIR} ]];then
         ## echo "TMPDIR not defined";
         TMP=$(mktemp -d -p ${TMP}); ## &> /dev/null);
         var_script_tmp_data_dir=${TMP};
         export  var_script_tmp_data_dir=${TMP};
     fi
 
-    if [[ ! -z ${TMPDIR} ]];
-    then
+    if [[ ! -z ${TMPDIR} ]];then
         ## echo "TMPDIR defined";
         TMP=$(mktemp -d -p ${TMPDIR}); ## &> /dev/null);
         var_script_tmp_data_dir=${TMP};
         export  var_script_tmp_data_dir=${TMP};
-
     fi
 fi
 
-if [[ ${tmp_dir} -eq 1 ]];
-then
+if [[ ${tmp_dir} -eq 1 ]];then
     ## Defining Script TMP Data Directory
     var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
     export var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
 
-    if [[ ! -d ${var_script_tmp_data_dir} ]];
-    then
+    if [[ ! -d ${var_script_tmp_data_dir} ]];then
         mkdir ${var_script_tmp_data_dir};
     else
         rm -fr ${var_script_tmp_data_dir};
@@ -609,8 +559,7 @@ case "${osname}"-"${cputype}" in
     Linux-*arm* )            plt=ARM ;;
 esac
 ## Determining_GNU_Bash_Version
-if [[ ${BASH_VERSINFO:-0} -ge 4 ]];
-then
+if [[ ${BASH_VERSINFO:-0} -ge 4 ]];then
     echo "GNU_BASH version "${BASH_VERSINFO}" is Installed" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo "GNU_BASH version 4 or higher is Not Installed";
@@ -623,8 +572,7 @@ fi
 ## Testing_GNU_Awk_Installation
 type gawk &> /dev/null;
 var_sde=$(echo ${?});
-if [[ ${var_sde} -eq 0 ]];
-then
+if [[ ${var_sde} -eq 0 ]];then
     echo "GNU_AWK is Installed" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo "GNU_AWK is Not Installed";
@@ -635,13 +583,11 @@ else
     exit 1;
 fi
 
-if [[ ${var_clustersequences} == "cluster_sequences" ]];
-then
+if [[ ${var_clustersequences} == "cluster_sequences" ]];then
     ## cd-hit
     type cd-hit &> /dev/null;
     var_sde=$(echo ${?});
-    if [[ ${var_sde} -eq 0 ]];
-    then
+    if [[ ${var_sde} -eq 0 ]];then
         echo "cd-hit is Installed" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     else
         echo "cd-hit is Not Installed";
@@ -693,72 +639,59 @@ func_time_execution_stop (){
 echo -e "Command Issued Was:" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 echo -e "\tScript Name:\t\t$(basename ${0})" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 
-if [[ ${var_INFILE01} == "proteins_file" ]];
-then
+if [[ ${var_INFILE01} == "proteins_file" ]];then
     echo -e "\tFile Type:\t\tProteome" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\tFile Type:\t\tTranscriptome" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_seqlowersize} == "l_Off" && ${var_INFILE01} == "proteins_file" ]];
-then
+if [[ ${var_seqlowersize} == "l_Off" && ${var_INFILE01} == "proteins_file" ]];then
     echo -e "\t-l Flag:\t\tSequence Lower Size: 50 aar" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_seqlowersize} == "l_Off" && ${var_INFILE01} == "transcripts_file" ]];
-then
+if [[ ${var_seqlowersize} == "l_Off" && ${var_INFILE01} == "transcripts_file" ]];then
     echo -e "\t-l Flag:\t\tSequence Lower Size: 150 nt" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 
 fi
-if [[ ${var_seqlowersize} != "l_Off" ]];
-then
-    if [[ ${var_INFILE01} == "proteins_file" ]];
-    then
+if [[ ${var_seqlowersize} != "l_Off" ]];then
+    if [[ ${var_INFILE01} == "proteins_file" ]];then
 	echo -e "\t-l Flag:\t\tSequence Lower Size: "${seqlowersize}" aar" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     fi
-    if [[ ${var_INFILE01} == "transcripts_file" ]];
-    then
+    if [[ ${var_INFILE01} == "transcripts_file" ]];then
 	echo -e "\t-l Flag:\t\tSequence Lower Size: "${seqlowersize}" nt" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
     fi
 fi
-if [[ ${var_sequppersize} == "unlimited_sequppersize" ]];
-then
+if [[ ${var_sequppersize} == "unlimited_sequppersize" ]];then
     echo -e "\t-u Flag:\t\tSequence Upper Size: No Limit" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-u Flag:\t\tSequence Upper Size: "${sequppersize}"" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_filterbiotypes} == "filter_biotypes" ]];
-then
+if [[ ${var_filterbiotypes} == "filter_biotypes" ]];then
     echo -e "\t-f Flag:\t\tFilter Biotypes: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-f Flag:\t\tFilter Biotypes: No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_dustgremlings} == "dust_gremlings" ]];
-then
+if [[ ${var_dustgremlings} == "dust_gremlings" ]];then
     echo -e "\t-d Flag:\t\tDust Gremlings: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-d Flag:\t\tDust Gremlings: No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_sortshortertolarger} == "do_not_sort_shorter_to_larger" ]];
-then
+if [[ ${var_sortshortertolarger} == "do_not_sort_shorter_to_larger" ]];then
     echo -e "\t-s Flag:\t\tSort File (Shorter to Larger): No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-s Flag:\t\tSort File (Shorter to Larger): Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_sortlargertoshorter} == "do_not_sort_larger_to_shorter" ]];
-then
+if [[ ${var_sortlargertoshorter} == "do_not_sort_larger_to_shorter" ]];then
     echo -e "\t-r Flag:\t\tSort File (Larger to Shorter): No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-r Flag:\t\tSort File (Larger to Shorter): Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${var_clustersequences} == "do_not_cluster_sequences" ]];
-then
+if [[ ${var_clustersequences} == "do_not_cluster_sequences" ]];then
     echo -e "\t-c Flag:\t\tCluster Sequences: No" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-c Flag:\t\tCluster Sequences: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 echo -e "\t-w Flag:\t\tFasta Width: "${fasta_width}"" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 ## Checking if the fasta file can be splitted
-if [[ ${split_file} -eq 1 ]];
-then
+if [[ ${split_file} -eq 1 ]];then
     echo -e "\t-i Flag:\t\tFasta File Splitting was not Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-i Flag:\t\tFasta File Splitting was Requested with files containing "${split_file}" sequence(s) each" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
@@ -770,8 +703,7 @@ fi
 ## Determining Number of Cores Requested
 echo -e "\t-x Flag:\t\tNumber of cores used: ${ncores}" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 ## Checking where the TMPDIR will be generated
-if [[ ${tmp_dir} -eq 0 ]];
-then
+if [[ ${tmp_dir} -eq 0 ]];then
     echo -e "\t-z Flag:\t\tTMPDIR Run for the TMPDIR was Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-z Flag:\t\tLocal Run for the TMPDIR was Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
@@ -781,8 +713,7 @@ fi
 ## sed --in-place=.bkup '/^$/d' ${INFILE01};
 grep -P "^$" ${INFILE01} &> /dev/null;
 var_sde=$(echo ${?});
-if [[ ${var_sde} -eq 0 ]];
-then
+if [[ ${var_sde} -eq 0 ]];then
     sed '/^$/d' ${INFILE01} > ${var_script_tmp_data_dir}/0000_${INFILE01};
 else
     ln -s $(pwd)/${INFILE01} ${var_script_tmp_data_dir}/0000_${INFILE01};
@@ -801,8 +732,7 @@ awk -F "\t" -v OFS="\t" '{gsub(/\076/,"\074",$1);gsub(/\075/,"\137\137",$1);gsub
 	> ${var_script_tmp_data_dir}/0001_${INFILE01};
 
 ## -u Flag
-if [[ ${var_sequppersize} == "limited_sequppersize" ]];
-then
+if [[ ${var_sequppersize} == "limited_sequppersize" ]];then
     awk -F "\t" -v SeqUpperSize=${sequppersize} '{if(length($2) <= SeqUpperSize) print $0}' \
 	${var_script_tmp_data_dir}/0001_${INFILE01} \
 	> ${var_script_tmp_data_dir}/0002_${INFILE01};
@@ -813,8 +743,7 @@ else
 fi
 
 ## -f Flag
-if [[ ${var_filterbiotypes} == "do_not_filter_biotypes" ]];
-then
+if [[ ${var_filterbiotypes} == "do_not_filter_biotypes" ]];then
     cp \
 	${var_script_tmp_data_dir}/0002_${INFILE01} \
 	${var_script_tmp_data_dir}/0003_${INFILE01};
@@ -826,8 +755,7 @@ fi
 
 ## Convert '*' (052) to 'X' (130)
 ## -d Flag
-if [[ ${var_dustgremlings} == "dust_gremlings" ]];
-then
+if [[ ${var_dustgremlings} == "dust_gremlings" ]];then
     awk -F "\t" -v OFS="\t" '{gsub(/\052/, "\130", $2); print}' \
 	${var_script_tmp_data_dir}/0003_${INFILE01} \
 	> ${var_script_tmp_data_dir}/0004_${INFILE01};
@@ -838,8 +766,7 @@ else
 fi
 
 ## -s Flag
-if [[ ${var_sortshortertolarger} == "do_not_sort_shorter_to_larger" ]];
-then
+if [[ ${var_sortshortertolarger} == "do_not_sort_shorter_to_larger" ]];then
     cp \
 	${var_script_tmp_data_dir}/0004_${INFILE01} \
 	${var_script_tmp_data_dir}/0005_${INFILE01};
@@ -850,8 +777,7 @@ else
 fi
 
 ## -r Flag
-if [[ ${var_sortlargertoshorter} == "do_not_sort_larger_to_shorter" ]];
-then
+if [[ ${var_sortlargertoshorter} == "do_not_sort_larger_to_shorter" ]];then
     cp \
 	${var_script_tmp_data_dir}/0005_${INFILE01} \
 	${var_script_tmp_data_dir}/0006_${INFILE01};
@@ -863,8 +789,7 @@ fi
 
 ## -c Flag
 ## Do Not Cluster and Do Not Split
-if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -eq 1 ]];
-then
+if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -eq 1 ]];then
     func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
     mv ${var_script_tmp_data_dir}/0007_${INFILE01} \
        ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
@@ -874,14 +799,12 @@ then
 fi
 
 ## Do Not Cluster and Do Split
-if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -ne 1 ]];
-then
+if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -ne 1 ]];then
     split -d --suffix-length=6 --elide-empty-files --lines=${split_file}  ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0006_split_;
     find ${var_script_tmp_data_dir} -type f -name 0006_split_\* | sort -n > ${var_script_tmp_data_dir}/0007_retrieve_uniprot_ids_array;
     readarray -t lines < ${var_script_tmp_data_dir}/0007_retrieve_uniprot_ids_array;
     count="1";
-    for i in ${lines[@]};
-    do
+    for i in ${lines[@]};do
 	func_fasta_formatter ${i} ${var_script_tmp_data_dir}/0008_$(basename ${i});
 	cp ${var_script_tmp_data_dir}/0008_$(basename ${i}) ${var_script_out_data_dir}/${INFILE01%.fa}_"${count}"_Fasta_Seq_Prep.fa;
 	((count++));
@@ -892,11 +815,9 @@ then
 fi
 
 ## Do Cluster and Do Not Split
-if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -eq 1 ]];
-then
+if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -eq 1 ]];then
     ## Proteome Clustering
-    if [[ ${var_INFILE01} == "proteins_file" ]];
-    then
+    if [[ ${var_INFILE01} == "proteins_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit \
             -c 1.0 -n 5 -p 1 -g 1 -T ${ncores} -d 300 -M 0 \
@@ -916,8 +837,7 @@ then
 	exit 0;
     fi
     ## Transcriptome Clustering
-    if [[ ${var_INFILE01} == "transcripts_file" ]];
-    then
+    if [[ ${var_INFILE01} == "transcripts_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit-est \
             -c 1.0 -n 8 -r 1 -p 1 -g 1 -T ${ncores} -d 40 -M 0 \
@@ -939,11 +859,9 @@ then
 fi
 
 ## Do Cluster and Do Split
-if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -ne 1 ]];
-then
+if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -ne 1 ]];then
     ## Proteome Clustering
-    if [[ ${var_INFILE01} == "proteins_file" ]];
-    then
+    if [[ ${var_INFILE01} == "proteins_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit \
             -c 1.0 -n 5 -p 1 -g 1 -T ${ncores} -d 300 -M 0 \
@@ -959,8 +877,7 @@ then
 	find ${var_script_tmp_data_dir} -type f -name 0009_split_\* | sort -n > ${var_script_tmp_data_dir}/0010_retrieve_uniprot_ids_array;
 	readarray -t lines < ${var_script_tmp_data_dir}/0010_retrieve_uniprot_ids_array;
 	count="1";
-	for i in "${lines[@]}";
-	do
+	for i in "${lines[@]}";do
 	    func_fasta_formatter $i ${var_script_tmp_data_dir}/0011_$(basename $i);
 	    cp ${var_script_tmp_data_dir}/0011_$(basename $i) ${var_script_out_data_dir}/${INFILE01%.fa}_"$count"_Fasta_Seq_Prep.fa;
 	    ((count++));
@@ -978,8 +895,7 @@ then
 	exit 0;
     fi
     ## Transcriptome Clustering
-    if [[ ${var_INFILE01} == "transcripts_file" ]];
-    then
+    if [[ ${var_INFILE01} == "transcripts_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit-est \
             -c 1.0 -n 8 -r 1 -p 1 -g 1 -T ${ncores} -d 40 -M 0 \
@@ -995,8 +911,7 @@ then
 	find ${var_script_tmp_data_dir} -type f -name 0009_split_\* | sort -n > ${var_script_tmp_data_dir}/0010_retrieve_uniprot_ids_array;
 	readarray -t lines < ${var_script_tmp_data_dir}/0010_retrieve_uniprot_ids_array;
 	count="1";
-	for i in "${lines[@]}";
-	do
+	for i in "${lines[@]}";do
 	    func_fasta_formatter $i ${var_script_tmp_data_dir}/0011_$(basename $i);
 	    cp ${var_script_tmp_data_dir}/0011_$(basename $i) ${var_script_out_data_dir}/${INFILE01%.fa}_"$count"_Fasta_Seq_Prep.fa;
 	    ((count++));
