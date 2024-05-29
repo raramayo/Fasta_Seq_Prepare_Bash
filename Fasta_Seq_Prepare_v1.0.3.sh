@@ -192,7 +192,7 @@ version="1.0.3";
 version_date_initial="DATE:2020/08/17";
 
 ## Defining_Script_Current_Version_Data (date '+DATE:%Y/%m/%d')
-version_date_current="DATE:2024/05/23";
+version_date_current="DATE:2024/05/29";
 
 ## Testing_Script_Input
 ## Is the number of arguments null?
@@ -443,13 +443,13 @@ else
 fi
 
 ## Processing: -w Flag
-## Assigning Width Outputted Fasta File
+## Assigning_Width_Outputted_Fasta_File
 if [[ -z ${fasta_width} ]];then
     fasta_width=${fasta_width:=80};
 fi
 
 ## Processing: -i Flag
-## Assigning Splitting of the Outputted Fasta File
+## Assigning_Splitting_of_the_Outputted_Fasta_File
 if [[ -z ${split_file} ]];then
     split_file=${split_file:=1};
 else
@@ -462,7 +462,7 @@ else
 fi
 
 ## Processing: -x Flag
-## Assigning Number of Cores
+## Assigning_Number_of_Cores
 if [[ -z ${ncores} ]];then
     ncores=${ncores:=2};
 fi
@@ -476,7 +476,7 @@ else [[ ${ncores} -lt ${var_nproc} ]];
 fi
 
 ## Processing '-z' Flag
-## Determining Where The TMPDIR Will Be Generated
+## Determining_Where_The_TMPDIR_Will_Be_Generated
 if [[ -z ${tmp_dir} ]];then
     tmp_dir=${tmp_dir:=0};
 fi
@@ -488,7 +488,7 @@ if ! [[ ${tmp_dir} =~ ${var_regex} ]];then
     exit 1;
 fi
 
-## Generating Directories
+## Generating_Directories
 var_script_out_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.dir";
 export var_script_out_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.dir";
 
@@ -502,7 +502,7 @@ if [[ -d ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp ]];then
     rm -fr ${INFILE01%.fa}_Fasta_Seq_Prepare.tmp &>/dev/null;
 fi
 
-## Generating/Cleaning TMP Data Directory
+## Generating/Cleaning_TMP_Data_Directory
 if [[ ${tmp_dir} -eq 0 ]];then
     ## Defining Script TMP Data Directory
     var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
@@ -528,7 +528,7 @@ if [[ ${tmp_dir} -eq 0 ]];then
 fi
 
 if [[ ${tmp_dir} -eq 1 ]];then
-    ## Defining Script TMP Data Directory
+    ## Defining_Script_TMP_Data_Directory
     var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
     export var_script_tmp_data_dir=""$(pwd)"/"${INFILE01%.fa}"_Fasta_Seq_Prepare.tmp";
 
@@ -582,7 +582,7 @@ else
     func_usage;
     exit 1;
 fi
-
+## Testing_CD-HIT_Installation
 if [[ ${var_clustersequences} == "cluster_sequences" ]];then
     ## cd-hit
     type cd-hit &> /dev/null;
@@ -605,7 +605,7 @@ echo -e "Script Running on: "${osname}", "${cputype}"\n" >> ${var_script_out_dat
 ## set LC_ALL to "C"
 export LC_ALL="C";
 
-## Defining Functions
+## Defining_Functions
 func_fasta_formatter(){
     ## Fasta Formatter-like AWK code. It is a bit slower but does not have fasta_formatter dependencies
     ## Convert                 to Fasta Format  : awk -F "\t" '{print $1 "\n" $(NF-1)}'
@@ -690,18 +690,20 @@ else
     echo -e "\t-c Flag:\t\tCluster Sequences: Yes" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 echo -e "\t-w Flag:\t\tFasta Width: "${fasta_width}"" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
-## Checking if the fasta file can be splitted
+
+## Checking_if_the_fasta_file_can_be_splitted
 if [[ ${split_file} -eq 1 ]];then
     echo -e "\t-i Flag:\t\tFasta File Splitting was not Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 else
     echo -e "\t-i Flag:\t\tFasta File Splitting was Requested with files containing "${split_file}" sequence(s) each" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-if [[ ${split_file} -gt 1 && $(grep -c --max-count=2 ">" ${INFILE01}) -eq 1 ]];
-then
+if [[ ${split_file} -gt 1 && $(grep -c --max-count=2 ">" ${INFILE01}) -eq 1 ]];then
     echo -e "\t-i Flag:\t\tBut...The Fasta file you have provided cannot be splitted" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
-## Determining Number of Cores Requested
+
+## Determining_Number_of_Cores_Requested
 echo -e "\t-x Flag:\t\tNumber of cores used: ${ncores}" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
+
 ## Checking where the TMPDIR will be generated
 if [[ ${tmp_dir} -eq 0 ]];then
     echo -e "\t-z Flag:\t\tTMPDIR Run for the TMPDIR was Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
@@ -709,7 +711,7 @@ else
     echo -e "\t-z Flag:\t\tLocal Run for the TMPDIR was Requested" >> ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.log;
 fi
 
-##  Remove empty lines (if present)
+## Remove_empty_lines_(if present)
 ## sed --in-place=.bkup '/^$/d' ${INFILE01};
 grep -P "^$" ${INFILE01} &> /dev/null;
 var_sde=$(echo ${?});
@@ -725,6 +727,7 @@ fi
 ## Convert ^[\074] [<]    to ^[\076] [>];
 ## Calculate sequences lengths;
 ## Filter sequences by size (if so requested)
+
 awk -F "\t" -v OFS="\t" '{gsub(/\076/,"\074",$1);gsub(/\075/,"\137\137",$1);gsub(/\040/,"\075",$1);gsub(/^\074/,"\076",$1);print $0}' \
     ${var_script_tmp_data_dir}/0000_${INFILE01} | \
     awk -F "\t" -v OFS="\t" 'BEGIN{RS=">"}NR>1{sub("\n","\t"); gsub("\n",""); print RS$0 "\t" length($(NF))}' | \
@@ -753,7 +756,7 @@ else
 	 > ${var_script_tmp_data_dir}/0003_${INFILE01};
 fi
 
-## Convert '*' (052) to 'X' (130)
+## Convert_'*'_(052)_to_'X'_(130)
 ## -d Flag
 if [[ ${var_dustgremlings} == "dust_gremlings" ]];then
     awk -F "\t" -v OFS="\t" '{gsub(/\052/, "\130", $2); print}' \
@@ -788,7 +791,7 @@ else
 fi
 
 ## -c Flag
-## Do Not Cluster and Do Not Split
+## Do_Not_Cluster_and_Do_Not_Split
 if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -eq 1 ]];then
     func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
     mv ${var_script_tmp_data_dir}/0007_${INFILE01} \
@@ -798,7 +801,7 @@ if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -eq
     exit 0;
 fi
 
-## Do Not Cluster and Do Split
+## Do_Not_Cluster_and_Do_Split
 if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -ne 1 ]];then
     split -d --suffix-length=6 --elide-empty-files --lines=${split_file}  ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0006_split_;
     find ${var_script_tmp_data_dir} -type f -name 0006_split_\* | sort -n > ${var_script_tmp_data_dir}/0007_retrieve_uniprot_ids_array;
@@ -814,9 +817,9 @@ if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -ne
     exit 0;
 fi
 
-## Do Cluster and Do Not Split
+## Do_Cluster_and_Do_Not_Split
 if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -eq 1 ]];then
-    ## Proteome Clustering
+    ## Proteome_Clustering
     if [[ ${var_INFILE01} == "proteins_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit \
@@ -836,7 +839,7 @@ if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -eq 1 ]];t
 	func_time_execution_stop;
 	exit 0;
     fi
-    ## Transcriptome Clustering
+    ## Transcriptome_Clustering
     if [[ ${var_INFILE01} == "transcripts_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit-est \
@@ -858,9 +861,9 @@ if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -eq 1 ]];t
     fi
 fi
 
-## Do Cluster and Do Split
+## Do_Cluster_and_Do_Split
 if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -ne 1 ]];then
-    ## Proteome Clustering
+    ## Proteome_Clustering
     if [[ ${var_INFILE01} == "proteins_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit \
@@ -894,7 +897,7 @@ if [[ ${var_clustersequences} == "cluster_sequences" && ${split_file} -ne 1 ]];t
 	func_time_execution_stop;
 	exit 0;
     fi
-    ## Transcriptome Clustering
+    ## Transcriptome_Clustering
     if [[ ${var_INFILE01} == "transcripts_file" ]];then
 	func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0007_${INFILE01};
 	cd-hit-est \
