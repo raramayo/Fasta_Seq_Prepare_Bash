@@ -85,10 +85,10 @@ more details.
 You should have received a copy of the GNU General Public License along
 with this program. If not, see <https://www.gnu.org/licenses/>.
 
-SCRIPT_NAME:                    Fasta_Seq_Prepare_v1.0.3.sh
-SCRIPT_VERSION:                 1.0.3
+SCRIPT_NAME:                    Fasta_Seq_Prepare_v1.0.4.sh
+SCRIPT_VERSION:                 1.0.4
 
-USAGE: Fasta_Seq_Prepare_v1.0.3.sh
+USAGE: Fasta_Seq_Prepare_v1.0.4.sh
  -p Proteins_Fasta_File.fa      # REQUIRED (Proteins File)
                                   (if '-t' Not Provided)
  -t Transcripts_Fasta_File.fa   # REQUIRED (Transcripts File)
@@ -114,10 +114,10 @@ USAGE: Fasta_Seq_Prepare_v1.0.3.sh
  -z TMPDIR Location             # OPTIONAL (default=0='TMPDIR Run')
 
 TYPICAL COMMANDS:
- Fasta_Seq_Prepare_v1.0.3.sh -p Proteins_Fasta_File.fa
- Fasta_Seq_Prepare_v1.0.3.sh -p Proteins_Fasta_File.fa -c yes
- Fasta_Seq_Prepare_v1.0.3.sh -t Transcripts_Fasta_File.fa
- Fasta_Seq_Prepare_v1.0.3.sh -t Transcripts_Fasta_File.fa -c yes
+ Fasta_Seq_Prepare_v1.0.4.sh -p Proteins_Fasta_File.fa
+ Fasta_Seq_Prepare_v1.0.4.sh -p Proteins_Fasta_File.fa -c yes
+ Fasta_Seq_Prepare_v1.0.4.sh -t Transcripts_Fasta_File.fa
+ Fasta_Seq_Prepare_v1.0.4.sh -t Transcripts_Fasta_File.fa -c yes
 
 INPUT01:          -p FLAG       REQUIRED input ONLY if the '-t' flag
                                   associated file is not provided
