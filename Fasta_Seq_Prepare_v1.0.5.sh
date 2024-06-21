@@ -4,6 +4,8 @@ func_copyright ()
 {
     cat <<COPYRIGHT
 
+Copyright (C) 2024 Rodolfo Aramayo
+
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
 Software Foundation, either version 3 of the License, or (at your option)
@@ -181,6 +183,9 @@ DEPENDENCIES:
                  (PMID: 16731699, and PMID: 23060610)
 
 $(func_authors)
+
+Repository: https://github.com/raramayo/Fasta_Seq_Prepare_Bash
+Issues:     https://github.com/raramayo/Fasta_Seq_Prepare_Bash/issues
 ###########################################################################
 EOF
 };
@@ -505,20 +510,20 @@ fi
 ## Generating/Cleaning_TMP_Data_Directory
 if [[ ${tmp_dir} -eq 0 ]]; then
     ## Defining Script TMP Data Directory
-    var_script_tmp_data_dir="$(pwd)/${INFILE01%.fa}_Fasta_Seq_Prepare.tmp"
-    export var_script_tmp_data_dir
+    var_script_tmp_data_dir="$(pwd)/${INFILE01%.fa}_Fasta_Seq_Prepare.tmp";
+    export var_script_tmp_data_dir;
 
-    if [[ -d ${var_script_tmp_data_dir} ]]; then
-        rm -fr ${var_script_tmp_data_dir}
+    if [[ -d ${var_script_tmp_data_dir} ]];then
+        rm -fr ${var_script_tmp_data_dir};
     fi
 
-    if [[ -z ${TMPDIR} ]]; then
-        TMPDIR=$(mktemp -d -t tmp.XXXXXX)
+    if [[ -z ${TMPDIR} ]];then
+        TMPDIR=$(mktemp -d -t tmp.XXXXXX);
     fi
 
-    TMP=$(mktemp -d -p ${TMPDIR} tmp.XXXXXX)
-    var_script_tmp_data_dir=${TMP}
-    export var_script_tmp_data_dir
+    TMP=$(mktemp -d -p ${TMPDIR} tmp.XXXXXX);
+    var_script_tmp_data_dir=${TMP};
+    export var_script_tmp_data_dir;
 fi
 
 if [[ ${tmp_dir} -eq 1 ]];then

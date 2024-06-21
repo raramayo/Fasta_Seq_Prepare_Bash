@@ -72,6 +72,8 @@ written.
 ###########################################################################
 ARAMAYO_LAB
 
+Copyright (C) 2024 Rodolfo Aramayo
+
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
 Software Foundation, either version 3 of the License, or (at your option)
@@ -85,10 +87,10 @@ more details.
 You should have received a copy of the GNU General Public License along
 with this program. If not, see <https://www.gnu.org/licenses/>.
 
-SCRIPT_NAME:                    Fasta_Seq_Prepare_v1.0.4.sh
+SCRIPT_NAME:                    Fasta_Seq_Prepare_v1.0.5.sh
 SCRIPT_VERSION:                 1.0.5
 
-USAGE: Fasta_Seq_Prepare_v1.0.4.sh
+USAGE: Fasta_Seq_Prepare_v1.0.5.sh
  -p Proteins_Fasta_File.fa      # REQUIRED (Proteins File)
                                   (if '-t' Not Provided)
  -t Transcripts_Fasta_File.fa   # REQUIRED (Transcripts File)
@@ -114,10 +116,10 @@ USAGE: Fasta_Seq_Prepare_v1.0.4.sh
  -z TMPDIR Location             # OPTIONAL (default=0='TMPDIR Run')
 
 TYPICAL COMMANDS:
- Fasta_Seq_Prepare_v1.0.4.sh -p Proteins_Fasta_File.fa
- Fasta_Seq_Prepare_v1.0.4.sh -p Proteins_Fasta_File.fa -c yes
- Fasta_Seq_Prepare_v1.0.4.sh -t Transcripts_Fasta_File.fa
- Fasta_Seq_Prepare_v1.0.4.sh -t Transcripts_Fasta_File.fa -c yes
+ Fasta_Seq_Prepare_v1.0.5.sh -p Proteins_Fasta_File.fa
+ Fasta_Seq_Prepare_v1.0.5.sh -p Proteins_Fasta_File.fa -c yes
+ Fasta_Seq_Prepare_v1.0.5.sh -t Transcripts_Fasta_File.fa
+ Fasta_Seq_Prepare_v1.0.5.sh -t Transcripts_Fasta_File.fa -c yes
 
 INPUT01:          -p FLAG       REQUIRED input ONLY if the '-t' flag
                                   associated file is not provided
@@ -232,6 +234,9 @@ DEPENDENCIES:
 Author:                            Rodolfo Aramayo
 WORK_EMAIL:                        raramayo@tamu.edu
 PERSONAL_EMAIL:                    rodolfo@aramayo.org
+
+Repository: https://github.com/raramayo/Fasta_Seq_Prepare_Bash
+Issues:     https://github.com/raramayo/Fasta_Seq_Prepare_Bash/issues
 ###########################################################################
 ```
 
