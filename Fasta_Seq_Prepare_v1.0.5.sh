@@ -186,13 +186,13 @@ EOF
 };
 
 ## Defining_Script_Current_Version
-version="1.0.4";
+version="1.0.5";
 
 ## Defining_Script_Initial_Version_Data (date '+DATE:%Y/%m/%d')
 version_date_initial="DATE:2020/08/17";
 
 ## Defining_Script_Current_Version_Data (date '+DATE:%Y/%m/%d')
-version_date_current="DATE:2024/06/20";
+version_date_current="DATE:2024/06/21";
 
 ## Testing_Script_Input
 ## Is the number of arguments null?
@@ -806,6 +806,8 @@ if [[ ${var_clustersequences} == "do_not_cluster_sequences" && ${split_file} -ne
 	cp ${var_script_tmp_data_dir}/0008_$(basename ${i}) ${var_script_out_data_dir}/${INFILE01%.fa}_"${count}"_Fasta_Seq_Prep.fa;
 	((count++));
     done
+    func_fasta_formatter ${var_script_tmp_data_dir}/0006_${INFILE01} ${var_script_tmp_data_dir}/0009_${INFILE01}
+    mv ${var_script_tmp_data_dir}/0009_${INFILE01} ${var_script_out_data_dir}/${INFILE01%.fa}_Fasta_Seq_Prep.fa;
     rm -fr ${var_script_tmp_data_dir};
     func_time_execution_stop;
     exit 0;

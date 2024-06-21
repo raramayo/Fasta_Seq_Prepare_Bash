@@ -86,7 +86,7 @@ You should have received a copy of the GNU General Public License along
 with this program. If not, see <https://www.gnu.org/licenses/>.
 
 SCRIPT_NAME:                    Fasta_Seq_Prepare_v1.0.4.sh
-SCRIPT_VERSION:                 1.0.4
+SCRIPT_VERSION:                 1.0.5
 
 USAGE: Fasta_Seq_Prepare_v1.0.4.sh
  -p Proteins_Fasta_File.fa      # REQUIRED (Proteins File)
